@@ -5,6 +5,7 @@ namePrefix: prod-
 resources:
   - ../../base
   - jenkins-prod-secret.yaml
+  - ingress.yaml
 patchesStrategicMerge:
   - patches.yaml
 configMapGenerator:

@@ -5,6 +5,7 @@ namePrefix: dev-
 resources:
   - ../../base
   - jenkins-dev-secret.yaml
+  - ingress.yaml
 patchesStrategicMerge:
   - patches.yaml
 configMapGenerator:
