@@ -8,8 +8,8 @@ spec:
     spec:
       containers:
       - name: sealed-secrets-controller
-  args:
-  - --update-status
+        args:
+        - --update-status
         resources:
           requests:
             memory: "64Mi"
