@@ -45,6 +45,16 @@ jenkins:
               resourceRequestMemory: "512Mi"
               resourceLimitCpu: "500m"
               resourceLimitMemory: "1Gi"
+            - name: "gradle"
+              image: "gradle:8.4.1-jdk17"
+              alwaysPullImage: true
+              workingDir: "/home/jenkins/agent"
+              command: ["sleep"]
+              args: ["infinity"]
+              resourceRequestCpu: "300m"
+              resourceRequestMemory: "1Gi"
+              resourceLimitCpu: "1500m"
+              resourceLimitMemory: "3Gi"
               
 jobs:
   - script: >
@@ -68,6 +78,40 @@ jobs:
                   stage('Deploy to Production') {
                     steps {
                       echo 'Deploying to production environment'
+                    }
+                  }
+                }
+              }
+            """)
+            sandbox()
+          }
+        }
+      }
+  - script: >
+      pipelineJob('prod-gradle-build') {
+        definition {
+          cps {
+            script("""
+              pipeline {
+                agent { label 'prod-jenkins-slave' }
+                stages {
+                  stage('Checkout') {
+                    steps {
+                      checkout scm
+                    }
+                  }
+                  stage('Build') {
+                    agent { label 'prod-jenkins-slave' }
+                    steps {
+                      container('gradle') {
+                        sh 'gradle --version'
+                        sh 'gradle clean build'
+                      }
+                    }
+                  }
+                  stage('Publish') {
+                    steps {
+                      echo 'Publishing artifacts...'
                     }
                   }
                 }
