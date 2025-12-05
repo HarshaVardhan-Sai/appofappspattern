@@ -4,7 +4,7 @@ namespace: jenkins-dev
 namePrefix: dev-
 resources:
   - ../../base
-  - jenkins-dev-sealedsecret.yaml
+  - jenkins-dev-secret.yaml
 patchesStrategicMerge:
   - patches.yaml
 configMapGenerator:

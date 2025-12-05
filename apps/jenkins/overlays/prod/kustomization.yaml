@@ -4,7 +4,7 @@ namespace: jenkins-prod
 namePrefix: prod-
 resources:
   - ../../base
-  - jenkins-prod-sealedsecret.yaml
+  - jenkins-prod-secret.yaml
 patchesStrategicMerge:
   - patches.yaml
 configMapGenerator:
