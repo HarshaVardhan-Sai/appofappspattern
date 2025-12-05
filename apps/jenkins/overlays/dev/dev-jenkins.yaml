@@ -1,0 +1,67 @@
+jenkins:
+  systemMessage: "Jenkins DEV Environment - configured automatically by JCasC"
+  
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: ${JENKINS_ADMIN_PASSWORD:-dev-admin123}
+       - id: developer
+         password: "dev123"
+         
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+        - "Job/Build:developer"
+        - "Job/Read:developer"
+        
+  remotingSecurity:
+    enabled: true
+    
+  nodes:
+    - permanent:
+        name: "built-in"
+        numExecutors: 1
+        
+  clouds:
+    - kubernetes:
+        name: "kubernetes"
+        serverUrl: "https://kubernetes.default"
+        namespace: "jenkins-dev"
+        jenkinsUrl: "http://dev-jenkins:8080"
+        jenkinsTunnel: "dev-jenkins:50000"
+        
+jobs:
+  - script: >
+      pipelineJob('dev-example-pipeline') {
+        definition {
+          cps {
+            script("""
+              pipeline {
+                agent any
+                stages {
+                  stage('Dev Build') {
+                    steps {
+                      echo 'Building in DEV environment'
+                    }
+                  }
+                  stage('Dev Test') {
+                    steps {
+                      echo 'Running tests in DEV'
+                    }
+                  }
+                }
+              }
+            """)
+            sandbox()
+          }
+        }
+      }
+      
+unclassified:
+  location:
+    adminAddress: "dev-admin@example.com"
+    url: "http://dev-jenkins:32000"

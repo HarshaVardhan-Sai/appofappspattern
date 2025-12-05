@@ -1,0 +1,94 @@
+jenkins:
+  systemMessage: "Jenkins PRODUCTION Environment - configured automatically by JCasC"
+  
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: ${JENKINS_ADMIN_PASSWORD}
+         
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+        
+  remotingSecurity:
+    enabled: true
+    
+  nodes:
+    - permanent:
+        name: "built-in"
+        numExecutors: 4
+        
+  clouds:
+    - kubernetes:
+        name: "kubernetes"
+        serverUrl: "https://kubernetes.default"
+        namespace: "jenkins-prod"
+        jenkinsUrl: "http://prod-jenkins:8080"
+        jenkinsTunnel: "prod-jenkins:50000"
+        connectTimeout: 10
+        readTimeout: 30
+        containerCapStr: 200
+        templates:
+          - name: "production"
+            label: "prod-jenkins-slave"
+            nodeUsageMode: NORMAL
+            containers:
+            - name: "jnlp"
+              image: "jenkins/inbound-agent:latest"
+              alwaysPullImage: true
+              workingDir: "/home/jenkins/agent"
+              resourceRequestCpu: "200m"
+              resourceRequestMemory: "512Mi"
+              resourceLimitCpu: "500m"
+              resourceLimitMemory: "1Gi"
+              
+jobs:
+  - script: >
+      pipelineJob('prod-deployment-pipeline') {
+        definition {
+          cps {
+            script("""
+              pipeline {
+                agent any
+                stages {
+                  stage('Production Build') {
+                    steps {
+                      echo 'Building for PRODUCTION'
+                    }
+                  }
+                  stage('Security Scan') {
+                    steps {
+                      echo 'Running security scans'
+                    }
+                  }
+                  stage('Deploy to Production') {
+                    steps {
+                      echo 'Deploying to production environment'
+                    }
+                  }
+                }
+              }
+            """)
+            sandbox()
+          }
+        }
+      }
+      
+unclassified:
+  location:
+    adminAddress: "prod-admin@example.com"
+    url: "http://prod-jenkins:32000"
+    
+  globalLibraries:
+    libraries:
+    - name: "production-shared-library"
+      defaultVersion: "main"
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              remote: "https://github.com/your-org/jenkins-shared-library.git"
