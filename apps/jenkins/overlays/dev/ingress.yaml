@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: jenkins.dev.example.com
+  - host: localhost
     http:
       paths:
       - path: /
@@ -16,5 +16,5 @@ spec:
           service:
             name: dev-jenkins
             port:
-              number: 8080
+              number: 8089
   tls: []
