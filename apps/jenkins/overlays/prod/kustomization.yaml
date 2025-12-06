@@ -6,7 +6,7 @@ resources:
   - ../../base
   - jenkins-prod-secret.yaml
   - ingress.yaml
-patchesStrategicMerge:
+patches:
   - patches.yaml
 configMapGenerator:
   - name: jenkins-config

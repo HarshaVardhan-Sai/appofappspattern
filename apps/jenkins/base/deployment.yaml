@@ -19,8 +19,10 @@ spec:
       - name: jenkins
         image: jenkins/jenkins:lts-jdk17
         ports:
-        - containerPort: 8089
-        - containerPort: 50000
+        - name: http
+          containerPort: 8089
+        - name: agent
+          containerPort: 50000
         envFrom:
         - configMapRef:
             name: jenkins-app-config
