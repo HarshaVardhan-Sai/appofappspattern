@@ -19,13 +19,16 @@ spec:
       - name: jenkins
         image: jenkins/jenkins:lts-jdk17
         ports:
-        - containerPort: 8080
+        - containerPort: 8089
         - containerPort: 50000
+        envFrom:
+        - configMapRef:
+            name: jenkins-app-config
         env:
-        - name: CASC_JENKINS_CONFIG
-          value: /var/jenkins_home/casc_configs/jenkins.yaml
+        - name: JENKINS_OPTS
+          value: "--httpPort=$(JENKINS_HTTP_PORT)"
         - name: JAVA_OPTS
-          value: "-Djenkins.install.runSetupWizard=false"
+          value: "$(JENKINS_JAVA_OPTS)"
         volumeMounts:
         - name: jenkins-home
           mountPath: /var/jenkins_home

@@ -6,3 +6,79 @@ resources:
   - pvc.yaml
   - rbac.yaml
   - configmap.yaml
+
+# Generate ConfigMap from env file for centralized config
+configMapGenerator:
+  - name: jenkins-app-config
+    envs:
+      - config.env
+
+# Replace hardcoded values with values from config.env
+replacements:
+  # Replace containerPort in deployment - use array index [0] for HTTP port
+  - source:
+      kind: ConfigMap
+      name: jenkins-app-config
+      fieldPath: data.JENKINS_HTTP_PORT
+    targets:
+      - select:
+          kind: Deployment
+          name: jenkins
+        fieldPaths:
+          - spec.template.spec.containers.[name=jenkins].ports.[0].containerPort
+  
+  # Replace containerPort in deployment - use array index [1] for agent port
+  - source:
+      kind: ConfigMap
+      name: jenkins-app-config
+      fieldPath: data.JENKINS_AGENT_PORT
+    targets:
+      - select:
+          kind: Deployment
+          name: jenkins
+        fieldPaths:
+          - spec.template.spec.containers.[name=jenkins].ports.[1].containerPort
+  
+  # Replace service HTTP ports
+  - source:
+      kind: ConfigMap
+      name: jenkins-app-config
+      fieldPath: data.JENKINS_HTTP_PORT
+    targets:
+      - select:
+          kind: Service
+          name: jenkins
+        fieldPaths:
+          - spec.ports.[name=http].port
+          - spec.ports.[name=http].targetPort
+      - select:
+          kind: Service
+          name: jenkins-nodeport
+        fieldPaths:
+          - spec.ports.[name=http].port
+          - spec.ports.[name=http].targetPort
+  
+  # Replace service agent ports
+  - source:
+      kind: ConfigMap
+      name: jenkins-app-config
+      fieldPath: data.JENKINS_AGENT_PORT
+    targets:
+      - select:
+          kind: Service
+          name: jenkins
+        fieldPaths:
+          - spec.ports.[name=agent].port
+          - spec.ports.[name=agent].targetPort
+  
+  # Replace NodePort
+  - source:
+      kind: ConfigMap
+      name: jenkins-app-config
+      fieldPath: data.JENKINS_NODEPORT
+    targets:
+      - select:
+          kind: Service
+          name: jenkins-nodeport
+        fieldPaths:
+          - spec.ports.[name=http].nodePort

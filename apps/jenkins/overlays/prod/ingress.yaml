@@ -16,5 +16,5 @@ spec:
           service:
             name: prod-jenkins
             port:
-              number: 8080
+              number: 8089
   tls: []

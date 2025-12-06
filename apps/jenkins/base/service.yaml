@@ -5,8 +5,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8089
+      targetPort: 8089
       name: http
     - port: 50000
       targetPort: 50000
@@ -21,8 +21,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8089
+      targetPort: 8089
       nodePort: 32000
       name: http
   selector:
