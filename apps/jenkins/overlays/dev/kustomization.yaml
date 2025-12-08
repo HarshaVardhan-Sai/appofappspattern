@@ -28,4 +28,4 @@ replacements:
           kind: Ingress
           name: jenkins
         fieldPaths:
-          - spec.rules.[host=localhost].http.paths.[path=/].backend.service.port.number
+          - spec.rules.0.http.paths.0.backend.service.port.number
