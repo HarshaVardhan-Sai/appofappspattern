@@ -6,6 +6,7 @@ resources:
   - pvc.yaml
   - rbac.yaml
   - configmap.yaml
+  - plugins-configmap.yaml
 
 # Generate ConfigMap from env file for centralized config
 configMapGenerator:

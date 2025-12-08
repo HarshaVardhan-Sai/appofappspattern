@@ -16,16 +16,3 @@ configMapGenerator:
     behavior: replace
     files:
       - jenkins.yaml=dev-jenkins.yaml
-
-# Replace ingress port with value from config
-replacements:
-  - source:
-      kind: ConfigMap
-      name: jenkins-app-config
-      fieldPath: data.JENKINS_HTTP_PORT
-    targets:
-      - select:
-          kind: Ingress
-          name: jenkins
-        fieldPaths:
-          - spec.rules.0.http.paths.0.backend.service.port.number

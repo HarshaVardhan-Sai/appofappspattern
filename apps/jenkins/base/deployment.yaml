@@ -36,6 +36,9 @@ spec:
           mountPath: /var/jenkins_home
         - name: jenkins-config
           mountPath: /var/jenkins_home/casc_configs
+          - name: jenkins-plugins
+            mountPath: /usr/share/jenkins/ref/plugins.txt
+            subPath: plugins.txt
         securityContext:
           runAsUser: 1000
           fsGroup: 1000
@@ -53,3 +56,6 @@ spec:
       - name: jenkins-config
         configMap:
           name: jenkins-config
+        - name: jenkins-plugins
+          configMap:
+            name: jenkins-plugins
