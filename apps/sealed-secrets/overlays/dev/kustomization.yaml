@@ -3,6 +3,3 @@ kind: Kustomization
 namespace: kube-system
 resources:
   - ../../base
-
-# This overlay is intentionally minimal — it's an application placeholder.
-# Initialization (values, patches) will be added later.
