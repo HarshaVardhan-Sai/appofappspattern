@@ -5,6 +5,7 @@ resources:
   - web-deployment.yaml
   - web-serviceaccount.yaml
   - web-rbac.yaml
+  - web-service.yaml
 
 patchesStrategicMerge:
   - controller-patch.yaml
