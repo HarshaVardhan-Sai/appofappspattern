@@ -1,0 +1,19 @@
+# overlays/sealed-secrets/dev/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sealed-secrets-web-ingress
+  namespace: kube-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ss.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sealed-secrets-web
+            port:
+              number: 8080
