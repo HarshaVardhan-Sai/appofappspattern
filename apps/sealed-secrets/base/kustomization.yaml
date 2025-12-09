@@ -3,8 +3,8 @@ kind: Kustomization
 resources:
   - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.24.0/controller.yaml
   - web-deployment.yaml
+  - web-serviceaccount.yaml
+  - web-rbac.yaml
 
 patchesStrategicMerge:
   - controller-patch.yaml
-  - web-serviceaccount.yaml
-  - web-rbac.yaml
