@@ -6,3 +6,5 @@ resources:
 
 patchesStrategicMerge:
   - controller-patch.yaml
+  - web-serviceaccount.yaml
+  - web-rbac.yaml
